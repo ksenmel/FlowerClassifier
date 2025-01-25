@@ -9,7 +9,7 @@ def contrast_flower(image: np.ndarray) -> float:
     :return:
     """
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    return np.std(gray_image)
+    return float(np.std(gray_image))  # type: ignore[arg-type]
 
 
 def amount_of_green(image):
@@ -48,13 +48,13 @@ def amount_of_red(image: np.ndarray) -> int:
 def avg_saturation(image: np.ndarray) -> float:
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)  # Переводим изображение в HSV
     saturation = hsv_image[:, :, 1]  # Извлекаем канал насыщенности
-    return float(np.mean(saturation))
+    return float(np.mean(saturation))  # type: ignore[arg-type]
 
 
 def avg_brightness(image: np.ndarray) -> float:
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)  # Переводим изображение в HSV
     brightness = hsv_image[:, :, 2]  # Извлекаем канал яркости
-    return float(np.mean(brightness))
+    return float(np.mean(brightness))  # type: ignore[arg-type]
 
 
 def circularity(image: np.ndarray) -> float:
@@ -170,7 +170,7 @@ def contour_complexity(image: np.ndarray) -> float:
         for contour in contours
         if cv2.contourArea(contour) > 500
     ]
-    return np.mean(complexities) if complexities else 0.0
+    return float(np.mean(complexities)) if complexities else 0.0
 
 
 def object_density(image: np.ndarray) -> float:

@@ -32,7 +32,7 @@ classifier.load("models/v1FlowerClassifier_model.pkl")
 new_df = pd.read_csv("tests/test.csv")
 
 predictions = classifier.predict(new_df)
-eval = classifier.evaluate(new_df)
+eval = classifier.evaluate(new_df, [])  # type: ignore[arg-type]
 
 print("Accuracy:", eval)
 print("Predictions:", predictions)
