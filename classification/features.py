@@ -4,19 +4,27 @@ import numpy as np
 
 def contrast_flower(image: np.ndarray) -> float:
     """
-    Вычисляет стандартное отклонение яркости изображения в оттенках серого. (ромашка или подсолнух)
-    :param image:
-    :return:
+    Computes the standard deviation of brightness in grayscale image, which helps identify flowers like daisies or sunflowers.
+
+    Args:
+        image (np.ndarray): Input image in BGR format.
+
+    Returns:
+        float: Standard deviation of brightness values.
     """
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     return float(np.std(gray_image))  # type: ignore[arg-type]
 
 
-def amount_of_green(image):
+def amount_of_green(image: np.ndarray) -> int:
     """
-    Индикатор для одуванчиков (рядом много зеленой растительности)
-    :param image:
-    :return:
+    Calculates the amount of green in the image, useful for identifying flowers surrounded by greenery (e.g., dandelions).
+
+    Args:
+        image (np.ndarray): Input image in BGR format.
+
+    Returns:
+        int: The number of pixels detected as green.
     """
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     lower_green = np.array([35, 40, 40])
@@ -26,6 +34,15 @@ def amount_of_green(image):
 
 
 def amount_of_yellow(image: np.ndarray) -> int:
+    """
+    Calculates the amount of yellow in the image, helpful for identifying flowers like sunflowers.
+
+    Args:
+        image (np.ndarray): Input image in BGR format.
+
+    Returns:
+        int: The number of pixels detected as yellow.
+    """
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     lower_yellow = np.array([20, 100, 100])
     upper_yellow = np.array([30, 255, 255])
@@ -34,6 +51,15 @@ def amount_of_yellow(image: np.ndarray) -> int:
 
 
 def amount_of_red(image: np.ndarray) -> int:
+    """
+    Calculates the amount of red in the image, useful for identifying flowers with red colors (e.g., roses).
+
+    Args:
+        image (np.ndarray): Input image in BGR format.
+
+    Returns:
+        int: The number of pixels detected as red.
+    """
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     lower_red1 = np.array([0, 100, 100])
     upper_red1 = np.array([10, 255, 255])
@@ -46,18 +72,45 @@ def amount_of_red(image: np.ndarray) -> int:
 
 
 def avg_saturation(image: np.ndarray) -> float:
-    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)  # Переводим изображение в HSV
-    saturation = hsv_image[:, :, 1]  # Извлекаем канал насыщенности
-    return float(np.mean(saturation))  # type: ignore[arg-type]
+    """
+    Computes the average saturation of the image in HSV space, indicating how vivid the colors are.
+
+    Args:
+        image (np.ndarray): Input image in BGR format.
+
+    Returns:
+        float: The average saturation value.
+    """
+    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    saturation = hsv_image[:, :, 1]  # Extract the saturation channel
+    return float(np.mean(saturation))
 
 
 def avg_brightness(image: np.ndarray) -> float:
-    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)  # Переводим изображение в HSV
-    brightness = hsv_image[:, :, 2]  # Извлекаем канал яркости
-    return float(np.mean(brightness))  # type: ignore[arg-type]
+    """
+    Computes the average brightness of the image in HSV space.
+
+    Args:
+        image (np.ndarray): Input image in BGR format.
+
+    Returns:
+        float: The average brightness value.
+    """
+    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    brightness = hsv_image[:, :, 2]  # Extract the brightness channel
+    return float(np.mean(brightness))
 
 
 def circularity(image: np.ndarray) -> float:
+    """
+    Calculates the circularity of the object in the image, which can help identify round shapes like sunflowers.
+
+    Args:
+        image (np.ndarray): Input image in BGR format.
+
+    Returns:
+        float: Circularity value (1 for perfect circle, closer to 0 for irregular shapes).
+    """
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     _, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -68,103 +121,63 @@ def circularity(image: np.ndarray) -> float:
     perimeter = cv2.arcLength(contour, True)
     if perimeter == 0:
         return 0.0
-    res = 4 * np.pi * area / (perimeter**2)
-    return res
+    return 4 * np.pi * area / (perimeter ** 2)
 
 
 def bud_shape(image: np.ndarray) -> float:
     """
-    Вычисляет коэффициент удлиненности объекта, чтобы идентифицировать форму бутона цветов.
-    Удлиненность определяется как отношение длины минимальной ограничивающей прямоугольной области
-    к ее ширине.
+    Computes the elongation ratio of the object to identify flower bud shapes, typically elongated for certain flowers.
 
     Args:
-        image (np.ndarray): Входное изображение в формате BGR.
+        image (np.ndarray): Input image in BGR format.
 
     Returns:
-        float: Коэффициент удлиненности (больше 1 для вытянутых форм).
+        float: The elongation ratio (higher values for elongated shapes).
     """
-    # Переводим изображение в оттенки серого
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # Применяем пороговое преобразование для выделения объектов
-    _, binary_image = cv2.threshold(
-        gray_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
-    )
-
-    contours, _ = cv2.findContours(
-        binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-    )
+    _, binary_image = cv2.threshold(gray_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     if not contours:
-        return 0.0  # Если контуры не найдены, возвращаем 0
-
-    # Выбираем самый крупный контур
+        return 0.0
     largest_contour = max(contours, key=cv2.contourArea)
-
-    # Находим минимальный ограничивающий прямоугольник
     _, _, width, height = cv2.boundingRect(largest_contour)
 
     if height == 0:
-        return 0.0  # Предотвращаем деление на ноль
-
-    # Рассчитываем коэффициент удлиненности
-    elongation_ratio = max(width, height) / min(width, height)
-
-    return elongation_ratio
+        return 0.0
+    return max(width, height) / min(width, height)
 
 
 def count_objects(image: np.ndarray) -> int:
     """
-    Считает количество отдельных объектов на изображении, которые могут быть одуванчиками или тюльпанами.
+    Counts the number of distinct objects in the image, which can help in identifying flowers like dandelions or tulips.
 
     Args:
-        image (np.ndarray): Входное изображение в формате BGR.
+        image (np.ndarray): Input image in BGR format.
 
     Returns:
-        int: Количество обнаруженных объектов.
+        int: The number of detected objects in the image.
     """
-    # Переводим изображение в оттенки серого
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # Применяем размытие для уменьшения шума
     blurred_image = cv2.GaussianBlur(gray_image, (5, 5), 0)
-
-    # Бинаризация изображения для выделения объектов
-    _, binary_image = cv2.threshold(
-        blurred_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
-    )
-
-    # Находим контуры
-    contours, _ = cv2.findContours(
-        binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-    )
-
-    # Считаем только крупные контуры, отбрасывая мелкие шумы
-    object_count = sum(1 for contour in contours if cv2.contourArea(contour) > 500)
-
-    return object_count
+    _, binary_image = cv2.threshold(blurred_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    return sum(1 for contour in contours if cv2.contourArea(contour) > 500)
 
 
 def contour_complexity(image: np.ndarray) -> float:
     """
-    Вычисляет фрактальную сложность контура на изображении.
-    Розы имеют сложные формы лепестков, которые можно измерить через фрактальную сложность контуров.
+    Computes the fractal complexity of contours in the image, useful for identifying complex petal shapes in flowers like roses.
 
     Args:
-        image (np.ndarray): Входное изображение в формате BGR.
+        image (np.ndarray): Input image in BGR format.
 
     Returns:
-        float: Среднее отношение периметра к площади для контуров.
+        float: Average perimeter-to-area ratio of contours.
     """
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    _, binary_image = cv2.threshold(
-        gray_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
-    )
-    contours, _ = cv2.findContours(
-        binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-    )
-
+    _, binary_image = cv2.threshold(gray_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     complexities = [
         cv2.arcLength(contour, True) / (cv2.contourArea(contour) + 1e-5)
         for contour in contours
@@ -175,62 +188,44 @@ def contour_complexity(image: np.ndarray) -> float:
 
 def object_density(image: np.ndarray) -> float:
     """
-    Вычисляет плотность объектов на изображении, учитывая соотношение их количества к площади.
+    Computes the density of objects in the image, which can help to identify crowded flowers.
 
     Args:
-        image (np.ndarray): Входное изображение в формате BGR.
+        image (np.ndarray): Input image in BGR format.
 
     Returns:
-        float: Плотность объектов (количество объектов на 100x100 пикселей).
+        float: The density of objects per 100x100 pixels.
     """
-    # Перевод в оттенки серого и бинаризация
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     _, binary_image = cv2.threshold(gray_image, 200, 255, cv2.THRESH_BINARY)
-
-    # Поиск контуров
-    contours, _ = cv2.findContours(
-        binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-    )
+    contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     total_area = image.shape[0] * image.shape[1]
-
-    # Считаем только крупные объекты
     object_count = sum(1 for contour in contours if cv2.contourArea(contour) > 300)
-
-    # Рассчитываем плотность
-    density = object_count / (total_area / 10000)  # На каждые 100x100 пикселей
-    return density
+    return object_count / (total_area / 10000)
 
 
 def elongated_shapes_ratio(image: np.ndarray) -> float:
     """
-    Определяет долю вытянутых объектов (стеблей) на изображении.
+    Identifies the proportion of elongated shapes (like stems) in the image.
 
     Args:
-        image (np.ndarray): Входное изображение в формате BGR.
+        image (np.ndarray): Input image in BGR format.
 
     Returns:
-        float: Доля вытянутых объектов относительно всех найденных объектов.
+        float: The ratio of elongated objects (ratio > 3 for elongated shapes).
     """
-    # Перевод в оттенки серого и бинаризация
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    _, binary_image = cv2.threshold(
-        gray_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
-    )
-
-    # Поиск контуров
-    contours, _ = cv2.findContours(
-        binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-    )
-
+    _, binary_image = cv2.threshold(gray_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     elongated_count = 0
     total_count = 0
 
     for contour in contours:
-        if cv2.contourArea(contour) > 300:  # Исключаем шум
+        if cv2.contourArea(contour) > 300:
             x, y, w, h = cv2.boundingRect(contour)
-            aspect_ratio = max(w, h) / min(w, h)  # Соотношение сторон объекта
+            aspect_ratio = max(w, h) / min(w, h)
             total_count += 1
-            if aspect_ratio > 3:  # Условие для вытянутых форм
+            if aspect_ratio > 3:
                 elongated_count += 1
 
     return elongated_count / total_count if total_count > 0 else 0.0
