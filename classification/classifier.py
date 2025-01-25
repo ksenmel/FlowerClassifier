@@ -3,7 +3,7 @@ import joblib
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import f1_score
 
 
 class Classifier:
@@ -66,7 +66,7 @@ class Classifier:
         Returns:
             float: The accuracy of the model, calculated as the percentage of correct predictions.
         """
-        return accuracy_score(y_test, y_pred)
+        return f1_score(y_test, y_pred, average="weighted")
 
     def download(self, directory: str, model_name: str):
         """
