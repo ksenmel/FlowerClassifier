@@ -29,7 +29,7 @@ class Classifier:
 
         return accuracy_score(y_test, y_pred)
 
-    def download(self, directory: str, model_name: str = 'v1FlowerClassifier_model'):
+    def download(self, directory: str, model_name):
         """
         Скачивает обученную модель в заданную директорию.
 

@@ -34,7 +34,7 @@ def train_mode(args):
     print(predictions)
     print(eval)
 
-    classifier.download(args.path_to_save)
+    classifier.download(args.path_to_save, args.name)
 
 
 def predict_mode(args):
@@ -84,8 +84,10 @@ if __name__ == "__main__":
         default="models/v1FlowerClassifier_model.pkl",
     )
     parser.add_argument(
-        "-s", "--path_to_save", help="path to save classification model"
+        "-s", "--path_to_save", help="Path to save classification model"
     )
+    parser.add_argument(
+        "-n", "--name", help="Name for the model to save", default="model")
 
     args = parser.parse_args()
 
