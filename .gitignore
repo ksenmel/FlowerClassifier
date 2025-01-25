@@ -1,0 +1,26 @@
+# Ignore VS Code files
+
+.vscode/
+
+
+# Ignore Idea files
+
+.idea/
+
+
+# Ignore Python virtual environment
+
+.venv/
+
+.env/
+
+venv/
+
+env/
+
+
+# Ignore Python build files
+
+__pycache__/
+
+*.py[cod]
