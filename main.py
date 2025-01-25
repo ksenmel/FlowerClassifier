@@ -87,7 +87,8 @@ if __name__ == "__main__":
         "-s", "--path_to_save", help="Path to save classification model"
     )
     parser.add_argument(
-        "-n", "--name", help="Name for the model to save", default="model")
+        "-n", "--name", help="Name for the model to save", default="model"
+    )
 
     args = parser.parse_args()
 
