@@ -68,7 +68,7 @@ def circularity(image: np.ndarray) -> float:
     perimeter = cv2.arcLength(contour, True)
     if perimeter == 0:
         return 0.0
-    res = 4 * np.pi * area / (perimeter ** 2)
+    res = 4 * np.pi * area / (perimeter**2)
     return res
 
 
@@ -88,9 +88,13 @@ def bud_shape(image: np.ndarray) -> float:
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Применяем пороговое преобразование для выделения объектов
-    _, binary_image = cv2.threshold(gray_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    _, binary_image = cv2.threshold(
+        gray_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
+    )
 
-    contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(
+        binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )
 
     if not contours:
         return 0.0  # Если контуры не найдены, возвращаем 0
@@ -127,10 +131,14 @@ def count_objects(image: np.ndarray) -> int:
     blurred_image = cv2.GaussianBlur(gray_image, (5, 5), 0)
 
     # Бинаризация изображения для выделения объектов
-    _, binary_image = cv2.threshold(blurred_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    _, binary_image = cv2.threshold(
+        blurred_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
+    )
 
     # Находим контуры
-    contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(
+        binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )
 
     # Считаем только крупные контуры, отбрасывая мелкие шумы
     object_count = sum(1 for contour in contours if cv2.contourArea(contour) > 500)
@@ -150,12 +158,17 @@ def contour_complexity(image: np.ndarray) -> float:
         float: Среднее отношение периметра к площади для контуров.
     """
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    _, binary_image = cv2.threshold(gray_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    _, binary_image = cv2.threshold(
+        gray_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
+    )
+    contours, _ = cv2.findContours(
+        binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )
 
     complexities = [
         cv2.arcLength(contour, True) / (cv2.contourArea(contour) + 1e-5)
-        for contour in contours if cv2.contourArea(contour) > 500
+        for contour in contours
+        if cv2.contourArea(contour) > 500
     ]
     return np.mean(complexities) if complexities else 0.0
 
@@ -175,7 +188,9 @@ def object_density(image: np.ndarray) -> float:
     _, binary_image = cv2.threshold(gray_image, 200, 255, cv2.THRESH_BINARY)
 
     # Поиск контуров
-    contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(
+        binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )
     total_area = image.shape[0] * image.shape[1]
 
     # Считаем только крупные объекты
@@ -198,10 +213,14 @@ def elongated_shapes_ratio(image: np.ndarray) -> float:
     """
     # Перевод в оттенки серого и бинаризация
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    _, binary_image = cv2.threshold(gray_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    _, binary_image = cv2.threshold(
+        gray_image, 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
+    )
 
     # Поиск контуров
-    contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(
+        binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )
 
     elongated_count = 0
     total_count = 0

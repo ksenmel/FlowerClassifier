@@ -28,7 +28,7 @@ classifier = Classifier()
 #
 # classifier.download('models')
 
-classifier.load('models/v1FlowerClassifier_model.pkl')
+classifier.load("models/v1FlowerClassifier_model.pkl")
 new_df = pd.read_csv("tests/test.csv")
 
 predictions = classifier.predict(new_df)
@@ -41,4 +41,6 @@ probs = classifier.predict_proba(new_df)
 
 # Пример: показываем вероятности для первого изображения
 print("Распределение вероятностей для первого изображения:")
-print(probs[14])  # Вероятности для всех классов (например, daisy, dandelion, rose, sunflower, tulip)
+print(
+    probs[14]
+)  # Вероятности для всех классов (например, daisy, dandelion, rose, sunflower, tulip)

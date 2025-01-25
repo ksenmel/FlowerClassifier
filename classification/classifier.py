@@ -29,7 +29,7 @@ class Classifier:
 
         return accuracy_score(y_test, y_pred)
 
-    def download(self, directory: str, model_name: str = 'v1FlowerClassifier_model'):
+    def download(self, directory: str, model_name: str = "v1FlowerClassifier_model"):
         """
         Скачивает обученную модель в заданную директорию.
 
@@ -39,7 +39,7 @@ class Classifier:
         """
         if not os.path.exists(directory):
             os.makedirs(directory)
-        model_path = os.path.join(directory, model_name + '.pkl')
+        model_path = os.path.join(directory, model_name + ".pkl")
         joblib.dump(self.model, model_path)
         print(f"Модель сохранена в {model_path}")
 
@@ -65,4 +65,3 @@ class Classifier:
         """
         proba = self.model.predict_proba(x)
         return proba
-

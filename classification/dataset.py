@@ -20,7 +20,7 @@ class FlowerDataset(Dataset):
             class_dir = os.path.join(path, class_name)
             if os.path.isdir(class_dir):
                 for file_name in os.listdir(class_dir):
-                    if file_name.endswith(('.jpg', '.jpeg', '.png')):
+                    if file_name.endswith((".jpg", ".jpeg", ".png")):
                         self.image_paths.append(os.path.join(class_dir, file_name))
                         self.labels.append(label)
 
@@ -46,7 +46,9 @@ class FlowerDataset(Dataset):
         Returns:
             dict: Словарь, где ключи — это имена признаков, а значения — соответствующие признаки.
         """
-        features_dict = {key: func(image) for key, func in self.feature_functions.items()}
+        features_dict = {
+            key: func(image) for key, func in self.feature_functions.items()
+        }
         return features_dict
 
     def create_df(self):
@@ -57,6 +59,6 @@ class FlowerDataset(Dataset):
             features.append(image_features)
 
         df = pd.DataFrame(features)
-        df['label'] = self.labels
+        df["label"] = self.labels
 
         return df
