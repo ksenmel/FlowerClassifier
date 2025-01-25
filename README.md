@@ -2,7 +2,7 @@
 
 <img src=https://github.com/user-attachments/assets/02a34512-1fda-4629-9839-c36544e0f2aa alt="logo" width="100" align="right" style="margin-left: 16px; margin-bottom: 16px">
 
-**FlowerClassifier** is a Machine Learning project that aims to classify flowers :flower: in images into five distinct categories: _daisy_, _dandelion_, _rose_, _sunflower_, and _tulip_.
+**FlowerClassifier** is a Machine Learning project that aims to classify flowers :tulip: in images into five distinct categories: _daisy_, _dandelion_, _rose_, _sunflower_, and _tulip_.
 The classifier uses Computer Vision techniques to analyze visual features such as color, shape, and texture to distinguish between different types of flowers.
 No more confusion between sunflowers and daisies — unless you're a bee :bee:.
 
