@@ -83,7 +83,7 @@ def avg_saturation(image: np.ndarray) -> float:
     """
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     saturation = hsv_image[:, :, 1]  # Extract the saturation channel
-    return float(np.mean(saturation))
+    return float(np.mean(saturation))  # type: ignore[arg-type]
 
 
 def avg_brightness(image: np.ndarray) -> float:
@@ -98,7 +98,7 @@ def avg_brightness(image: np.ndarray) -> float:
     """
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     brightness = hsv_image[:, :, 2]  # Extract the brightness channel
-    return float(np.mean(brightness))
+    return float(np.mean(brightness))  # type: ignore[arg-type]
 
 
 def circularity(image: np.ndarray) -> float:
