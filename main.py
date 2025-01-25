@@ -13,7 +13,7 @@ def train_mode(args):
     dataset = FlowerDataset(path=args.dataset_path)
 
     print(
-        f"Number of samples in the dataset: {len(dataset)} \n There are {len(dataset.classes)} classes: {dataset.classes} \n"
+        f"Number of samples in the dataset: {len(dataset)}\nThere are {len(dataset.classes)} classes: {dataset.classes}\n"
     )
 
     df = dataset.create_df()
@@ -45,7 +45,6 @@ def predict_mode(args):
 
     features = {key: func(image) for key, func in feature_functions.items()}
     df = pd.DataFrame([features])
-    # print(df)
 
     X = df.values
 
